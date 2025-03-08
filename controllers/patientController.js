@@ -1,4 +1,5 @@
 import Patient from "../models/patient.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 export const getProfile = async (req, res) => {
     try {
@@ -67,5 +68,30 @@ export const revokeAccess = async (req, res) => {
     res.status(200).json({ message: 'Access revoked successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const uploadReport = async (req, res) => {
+  try {
+      const { imgHash } = req.body;
+      const patientId = req.user.id;
+
+      if (!imgHash) {
+          return res.status(400).json({ message: 'imgHash is required' });
+      }
+
+      const patient = await Patient.findById(patientId);
+      if (!patient) {
+          return res.status(404).json({ message: 'Patient not found' });
+      }
+
+      // Push new imgHash to the existing array
+      patient.imgHash.push(imgHash);
+      await patient.save();
+
+      res.status(200).json({ message: 'imgHash added successfully', patient });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
   }
 };

@@ -1,7 +1,7 @@
 import express from 'express';
 import { getProfile } from '../controllers/patientController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
-import { grantAccess, revokeAccess } from '../controllers/patientController.js';
+import { uploadReport, grantAccess, revokeAccess } from '../controllers/patientController.js';
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.post('/grant-access', authMiddleware(['patient']), grantAccess);
 
 // Revoke access from a doctor/hospital
 router.post('/revoke-access', authMiddleware(['patient']), revokeAccess);
+
+router.post('/upload-report', authMiddleware(['patient']), uploadReport);
 
 export default router;
