@@ -12,8 +12,9 @@ router.get('/profile', authMiddleware(['patient']), getProfile);
 router.post('/grant-access', authMiddleware(['patient']), grantAccess);
 
 // Revoke access from a doctor/hospital
-router.post('/revoke-access', authMiddleware(['patient']), revokeAccess);
+router.put('/revoke-access', authMiddleware(['patient']), revokeAccess);
 
 router.post('/upload-report', authMiddleware(['patient']), uploadReport);
+
 
 export default router;

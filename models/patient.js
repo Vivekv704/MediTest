@@ -12,7 +12,10 @@ const PatientSchema = new mongoose.Schema({
   hhNumber: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   imgHash: { type: [String], required: false },
-  permissionsList: [{type: String }],
+  permissions: [{
+    type : String,
+    ref: 'Doctor',
+  }],
 });
 
 export default mongoose.model('Patient', PatientSchema);

@@ -36,6 +36,11 @@ export const grantAccess = async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
+    // Initialize permissions if it is undefined
+    if (!patient.permissions) {
+      patient.permissions = [];
+    }
+
     // Check if the HH number is already in the permissions list
     if (patient.permissions.includes(hhNumber)) {
       return res.status(400).json({ message: 'Access already granted' });
@@ -56,9 +61,17 @@ export const revokeAccess = async (req, res) => {
   const { hhNumber } = req.body; // HH number of the doctor/hospital
 
   try {
+    if(!hhNumber) {
+      return res.status(400).json({ message: 'HH number is required' });
+    }
     const patient = await Patient.findById(req.user.id);
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    // Check if the HH number is in the permissions list
+    if (!patient.permissions.includes(hhNumber)) {
+      return res.status(400).json({ message: 'Access not found' });
     }
 
     // Remove the HH number from the permissions list
